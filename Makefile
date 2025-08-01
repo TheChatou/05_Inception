@@ -6,7 +6,7 @@
 #    By: fcoullou <fcoullou@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/24 14:33:15 by fcoullou          #+#    #+#              #
-#    Updated: 2025/04/24 14:38:20 by fcoullou         ###   ########.fr        #
+#    Updated: 2025/08/01 15:02:29 by fcoullou         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,14 +33,15 @@ CLEAR_EOL_FROM_CURSOR=; tput el; printf
 
 all: up 
 
+#verifie la construction et construit
 up:
-	docker-compose -f src/docker-compose.yml up -d --build
+	docker-compose -f srcs/docker-compose.yml up -d --build
 
 down:
-	docker-compose -f src/docker-compose.yml down
+	docker-compose -f srcs/docker-compose.yml down
 
 clean:
-    docker-compose -f srcs/docker-compose.yml down --volumes
+	docker-compose -f srcs/docker-compose.yml down --volumes
 
 fclean: clean
 	docker system prune -af

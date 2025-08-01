@@ -5,19 +5,20 @@
 #                                                     +:+ +:+         +:+      #
 #    By: fcoullou <fcoullou@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2025/04/24 14:39:20 by fcoullou          #+#    #+#              #
-#    Updated: 2025/05/05 13:51:54 by fcoullou         ###   ########.fr        #
+#    Created: 2025/04/24 14:39:23 by fcoullou          #+#    #+#              #
+#    Updated: 2025/08/01 15:03:51 by fcoullou         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-# Base image
-FROM nginx:alpine
+FROM debian:bookworm
 
-#Copy the index.html file /usr/share/nginx/html/
-COPY index.html /usr/share/nginx/html/
+# Install dependencies
+RUN apt-get update && apt-get upgrade -y && \
+    apt-get install -y php php-mysql php-fpm
+    
+# Copy WordPress files
+COPY ./wpStart.sh /usr/local/bin/wpStart.sh
 
-# Expose port 80
-EXPOSE 80
+RUN chmod 777 /usr/local/bin/wpStart.sh
 
-# Start Nginx
-CMD ["nginx", "-g", "daemon off;"]
+ENTRYPOINT ["/usr/local/bin/wpStart.sh"]

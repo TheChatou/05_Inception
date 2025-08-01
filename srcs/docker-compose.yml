@@ -1,36 +1,53 @@
-version: '2.33.1'
+# version: '2.33.1'
 
 services:
-  # mariadb:
-  #   build: ./requirements/mariadb
-  #   env_file: ../.env
-  #   volumes:
-  #     - mariadb_data:/var/lib/mysql
-  #   networks:
-  #     - inception
+  mariadb:
+    build: ./builds/mariadb
+    image: mariadb
+    env_file: ../srcs/.env
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    networks:
+      - inception
 
-  # wordpress:
-  #   build: ./requirements/wordpress
-  #   env_file: ../.env
-  #   depends_on:
-  #     - mariadb
-  #   volumes:
-  #     - wordpress_data:/var/www/html
-  #   networks:
-  #     - inception
+  wordpress:
+    build: ./builds/wordpress
+    image: wordpress
+    env_file: ../srcs/.env
+    depends_on:
+      - mariadb
+    volumes:
+      - wordpress_data:/var/www/html
+    networks:
+      - inception
 
   nginx:
-    build: ./requirements/nginx
+    build: ./builds/nginx
     ports:
-      - "80:80"
+      - "8080:80"
     depends_on:
       - wordpress
+    volumes:
+      - wordpress_data:/var/www/html
     networks:
       - inception
 
 volumes:
   mariadb_data:
+    name: mariadb_data
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/fcoullou/data/mariadb
+      o: bind
   wordpress_data:
+    name: wordpress_data
+    driver: bridge
+    driver_opts:
+      type: none
+      device: /home/fcoullou/data/wordpress
+      o: bind
 
 networks:
   inception:
+    name: inception
