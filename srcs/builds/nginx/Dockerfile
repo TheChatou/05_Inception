@@ -3,12 +3,19 @@
 #                                                         :::      ::::::::    #
 #    Dockerfile                                         :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: fcoullou <fcoullou@student.42.fr>          +#+  +:+       +#+         #
+#    By: chatou <chatou@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/24 14:39:20 by fcoullou          #+#    #+#              #
-#    Updated: 2025/08/01 18:58:25 by fcoullou         ###   ########.fr        #
+#    Updated: 2025/09/10 14:27:53 by chatou           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
+
+#   NGINX va etre la seule porte d'entree de l'infrastructure
+#   Il doit donc etre le plus securise possible, d'ou l'utilisation du port 443
+#  pour le SSL.
+#   Il doit servir les fichiers statiques (html, css, js) et faire du reverse proxy
+#  vers le service php-fpm pour les fichiers dynamiques (php).
+
 
 # Base image
 FROM debian:bookworm

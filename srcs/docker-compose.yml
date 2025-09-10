@@ -3,34 +3,41 @@
 services:
   mariadb:
     build: ./builds/mariadb
-    image: mariadb
-    env_file: ../srcs/.env
+    image: mariadb:10.6
+    env_file: ./.env
     volumes:
       - mariadb_data:/var/lib/mysql
     networks:
       - inception
+    restart: always
+    secrets:
+      - db_root_password
+      - db_password
 
   wordpress:
     build: ./builds/wordpress
-    image: wordpress
-    env_file: ../srcs/.env
+    image: wordpress:6.6
+    env_file: ./.env
     depends_on:
       - mariadb
     volumes:
       - wordpress_data:/var/www/html
     networks:
       - inception
+    restart: always
 
   nginx:
     build: ./builds/nginx
+    image: ngnix:1.26
     ports:
-      - "8080:80"
+      - "443:443"
     depends_on:
       - wordpress
     volumes:
       - wordpress_data:/var/www/html
     networks:
       - inception
+    restart: always
 
 volumes:
   mariadb_data:
@@ -42,7 +49,7 @@ volumes:
       o: bind
   wordpress_data:
     name: wordpress_data
-    driver: bridge
+    driver: local
     driver_opts:
       type: none
       device: /home/fcoullou/data/wordpress
@@ -51,3 +58,9 @@ volumes:
 networks:
   inception:
     name: inception
+
+secrets:
+  db_root_password:
+    file: ../secrets/db_root_pswd.txt
+  db_password:
+    file: ../secrets/db_pswd.txt
