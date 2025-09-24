@@ -31,17 +31,24 @@ CLEAR_EOL_FROM_CURSOR=; tput el; printf
 ################################################################################
 ##	RULES		################################################################
 
-all: up 
+all: mariadb_data wordpress_data up 
 
+#build les dossiers des data
+mariadb_data:
+	@mkdir -p /home/fcoullou/data/mariadb
+
+wordpress_data:
+	@mkdir -p /home/fcoullou/data/wordpress
+	
 #verifie la construction et construit
 up:
-	docker-compose -f srcs/docker-compose.yml up -d --build
+	docker compose -f srcs/docker-compose.yml up -d --build
 
 down:
-	docker-compose -f srcs/docker-compose.yml down
+	docker compose -f srcs/docker-compose.yml down
 
 clean:
-	docker-compose -f srcs/docker-compose.yml down --volumes
+	docker compose -f srcs/docker-compose.yml down --volumes
 
 fclean: clean
 	docker system prune -af

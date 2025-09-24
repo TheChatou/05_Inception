@@ -21,7 +21,7 @@
 FROM debian:bookworm
 
 # Expose port 80
-EXPOSE 80
+EXPOSE 443
 
 # Install security features
 RUN apt-get update && apt-get upgrade -y && apt-get install -y nginx
