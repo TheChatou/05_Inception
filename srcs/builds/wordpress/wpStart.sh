@@ -2,9 +2,7 @@
 set -eu
 
 # injecter le mdp depuis le secret
-if [ -f /run/secrets/db_password ]; then
-  export WORDPRESS_DB_PASSWORD="$(cat /run/secrets/db_password)"
-fi
+PASS="$(cat /run/secrets/db_pswd)"
 
 # générer wp-config.php si absent
 if [ ! -f /var/www/html/wp-config.php ]; then

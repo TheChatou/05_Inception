@@ -2,56 +2,39 @@
 
 services:
   mariadb:
+    image: mariadb
     build: ./builds/mariadb
-    container_name: srcs-mariadb-1
+    container_name: mariadb
     env_file: ./.env
-    environment:
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
     volumes:
       - mariadb_data:/var/lib/mysql
     networks: [inception]
-    restart: always
     secrets:
-      - db_root_password
-      - db_password
-    healthcheck:
-      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -p$(cat /run/secrets/db_root_password) --silent"]
-      interval: 5s
-      timeout: 3s
-      retries: 25
+      - db_root_pswd
+      - db_pswd
 
   wordpress:
+    image: wordpress
     build: ./builds/wordpress
-    container_name: srcs-wordpress-1
-    restart: always
+    container_name: wordpress
     env_file: ./.env
-    environment:
-      WORDPRESS_DB_HOST: mariadb:3306
-      WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
-      WORDPRESS_DB_USER: ${MYSQL_USER}
-      WP_ADMIN_USER: ${WP_ADMIN_USER}
-      WP_ADMIN_PASSWORD: ${WP_ADMIN_PASSWORD}
-      WP_ADMIN_EMAIL: ${WP_ADMIN_EMAIL}
-      WORDPRESS_TITLE: ${WORDPRESS_TITLE}
     depends_on:
-      mariadb:
-        condition: service_healthy
+      - mariadb
     secrets:
-      - db_password
+      - db_pswd
     volumes:
       - wordpress_data:/var/www/html
     networks: [inception]
 
   nginx:
+    image: nginx
     build: ./builds/nginx
-    container_name: srcs-nginx-1
-    restart: always
+    container_name: nginx
     depends_on: [wordpress]
     ports:
       - "443:443"
     volumes:
-      - wordpress_data:/var/www/html
+      - wordpress_data:/var/www/
     networks: [inception]
 
 volumes:
@@ -76,7 +59,7 @@ networks:
     driver: bridge
 
 secrets:
-  db_root_password:
+  db_root_pswd:
     file: ../secrets/db_root_pswd.txt
-  db_password:
+  db_pswd:
     file: ../secrets/db_pswd.txt

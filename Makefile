@@ -53,7 +53,7 @@ clean:
 fclean: clean
 	docker system prune -af
 
-re: fclean up
+re: down fclean up
 
 .PHONY: all up down clean fclean re
 #------------------------------------------------------------------------------#

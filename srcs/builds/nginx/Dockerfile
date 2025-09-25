@@ -17,20 +17,20 @@
 #  vers le service php-fpm pour les fichiers dynamiques (php).
 
 
-# Base image
+# image
 FROM debian:bookworm
 
-# Expose port 80
+# Port 443 pour le https
 EXPOSE 443
 
-# Install security features
+# Installation de nginx
 RUN apt-get update && apt-get upgrade -y && apt-get install -y nginx
 
-# Copy Nginx configuration file
+# Copie de la configuration nginx
 COPY nginx.conf /etc/nginx/nginx.conf
 
-# Create necessary directories
-RUN mkdir -p /var/www/html
+# Création des répertoires nécessaires
+RUN mkdir -p /var/www/
 
-# Start Nginx
+# Démarrage de Nginx
 CMD ["nginx", "-g", "daemon off;"]

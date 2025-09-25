@@ -10,17 +10,18 @@
 #                                                                              #
 # **************************************************************************** #
 
-# Base image
+# Image
 FROM debian:bookworm
 
-# Install dependencies
+# Installation des dépendances
 RUN apt-get update && apt-get upgrade && apt-get install -y mariadb-server
 
-# Configure MariaDB
-COPY dbStart.sh /usr/local/bin/dbStart.sh
+# Configuration de MariaDB
+COPY dbStart.sh /home/dbStart.sh
 
-RUN chmod 777 /usr/local/bin/dbStart.sh
+# Permissions d'exécution pour le script
+RUN chmod 777 /home/dbStart.sh
 
-# Once the database is created, the script will be executed
-ENTRYPOINT [ "dbStart.sh" ]
+# Une fois la base de données créée, le script sera exécuté
+ENTRYPOINT [ "/home/dbStart.sh" ]
 

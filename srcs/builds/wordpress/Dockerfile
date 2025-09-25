@@ -10,15 +10,18 @@
 #                                                                              #
 # **************************************************************************** #
 
+# Image
 FROM debian:bookworm
 
-# Install dependencies
+# Installation des dépendances
 RUN apt-get update && apt-get upgrade -y && \
     apt-get install -y php php-mysql php-fpm
-    
-# Copy WordPress files
-COPY ./wpStart.sh /usr/local/bin/wpStart.sh
 
-RUN chmod 777 /usr/local/bin/wpStart.sh
+# Copie des fichiers WordPress
+COPY ./wpStart.sh /home/wpStart.sh
 
-ENTRYPOINT ["/usr/local/bin/wpStart.sh"]
+# Permissions d'exécution pour le script
+RUN chmod 777 /home/wpStart.sh
+
+# Lancement du script au démarrage du conteneur
+ENTRYPOINT ["/home/wpStart.sh"]
