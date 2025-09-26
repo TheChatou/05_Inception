@@ -7,14 +7,18 @@ services:
     container_name: mariadb
     env_file: ./.env
     volumes:
-      - mariadb_data:/var/lib/mysql
+      - mariadb:/var/lib/mysql
     networks: [inception]
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
     secrets:
       - db_root_pswd
       - db_pswd
 
   wordpress:
     image: wordpress
+    restart: always
     build: ./builds/wordpress
     container_name: wordpress
     env_file: ./.env
@@ -23,7 +27,7 @@ services:
     secrets:
       - db_pswd
     volumes:
-      - wordpress_data:/var/www/html
+      - wordpress:/var/www/wordpress
     networks: [inception]
 
   nginx:
@@ -34,19 +38,19 @@ services:
     ports:
       - "443:443"
     volumes:
-      - wordpress_data:/var/www/
+      - wordpress:/var/www/wordpress
     networks: [inception]
 
 volumes:
-  mariadb_data:
-    name: mariadb_data
+  mariadb:
+    name: mariadb
     driver: local
     driver_opts:
       type: none
       device: /home/fcoullou/data/mariadb
       o: bind
-  wordpress_data:
-    name: wordpress_data
+  wordpress:
+    name: wordpress
     driver: local
     driver_opts:
       type: none

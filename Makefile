@@ -53,7 +53,11 @@ clean:
 fclean: clean
 	docker system prune -af
 
-re: down fclean up
+purge:
+	sudo rm -rf /home/fcoullou/data/wordpress/*
+	sudo rm -rf /home/fcoullou/data/mariadb/*
 
-.PHONY: all up down clean fclean re
+re: purge down fclean up
+
+.PHONY: all up down clean fclean re purge
 #------------------------------------------------------------------------------#

@@ -28,9 +28,14 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y nginx
 
 # Copie de la configuration nginx
 COPY nginx.conf /etc/nginx/nginx.conf
+COPY site.conf /etc/nginx/conf.d/site.conf
+
+# Copie des certificats SSL
+COPY server.crt /etc/nginx/certs/server.crt
+COPY server.key /etc/nginx/certs/server.key
 
 # Création des répertoires nécessaires
-RUN mkdir -p /var/www/
+RUN mkdir -p /var/www/wordpress
 
 # Démarrage de Nginx
 CMD ["nginx", "-g", "daemon off;"]
