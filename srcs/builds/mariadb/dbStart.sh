@@ -7,6 +7,8 @@ chown mysql:mysql /run/mysqld
 # On associe les variables d'environnement aux variables utilisées dans le script
 ROOT="$(cat /run/secrets/db_root_pswd)"
 PASS="$(cat /run/secrets/db_pswd)"
+NAME="${MYSQL_DATABASE}"
+USER="${MYSQL_USER}"
 
 # BUT : Lancement de MariaDB en fond #
 # Initialisation puis lancement si la base est vide, sinon juste lancement
@@ -31,8 +33,8 @@ if [ ! -d /var/lib/mysql/mysql ]; then
 
   # Config initiale (root, DB, user)
   mariadb --protocol=socket -uroot -h localhost <<SQL
-CREATE USER IF NOT EXISTS '${MYSQL_USER}'@'%' IDENTIFIED BY '${PASS}';
-GRANT ALL PRIVILEGES ON \`${MYSQL_DATABASE}\`.* TO '${MYSQL_USER}'@'%';
+CREATE USER IF NOT EXISTS '${USER}'@'%' IDENTIFIED BY '${PASS}';
+GRANT ALL PRIVILEGES ON \`${NAME}\`.* TO '${USER}'@'%';
 FLUSH PRIVILEGES;
 SQL
 

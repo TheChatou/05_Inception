@@ -1,5 +1,3 @@
-# version: '2.33.1'
-
 services:
   mariadb:
     image: mariadb
@@ -9,12 +7,9 @@ services:
     volumes:
       - mariadb:/var/lib/mysql
     networks: [inception]
-    environment:
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
     secrets:
-      - db_root_pswd
-      - db_pswd
+      - db_root_password
+      - db_password
 
   wordpress:
     image: wordpress
@@ -25,9 +20,10 @@ services:
     depends_on:
       - mariadb
     secrets:
-      - db_pswd
+      - db_password
+      - wp_password
     volumes:
-      - wordpress:/var/www/wordpress
+      - wordpress:/var/www/html
     networks: [inception]
 
   nginx:
@@ -38,7 +34,7 @@ services:
     ports:
       - "443:443"
     volumes:
-      - wordpress:/var/www/wordpress
+      - wordpress:/var/www/html:ro
     networks: [inception]
 
 volumes:
@@ -63,7 +59,9 @@ networks:
     driver: bridge
 
 secrets:
-  db_root_pswd:
+  db_root_password:
     file: ../secrets/db_root_pswd.txt
-  db_pswd:
+  db_password:
     file: ../secrets/db_pswd.txt
+  wp_password:
+    file: ../secrets/wp_pswd.txt
