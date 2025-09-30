@@ -13,7 +13,6 @@ services:
 
   wordpress:
     image: wordpress
-    restart: always
     build: ./builds/wordpress
     container_name: wordpress
     env_file: ./.env

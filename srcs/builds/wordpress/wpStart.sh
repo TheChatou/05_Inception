@@ -1,5 +1,5 @@
 #!/bin/sh
-set -eu          # -e : exit on error ; -u : exit on undefined var
+set -eux         # -e : exit on error ; -u : exit on undefined var ; -x : debug
 
 # On associe les variables d'environnement aux variables utilisées dans le script
 DB_PASS="$(cat /run/secrets/db_password)"
@@ -20,6 +20,10 @@ mkdir -p "${WEBROOT}"
 chown -R www-data:www-data "${WEBROOT}"
 cd "${WEBROOT}"
 
+if [ ! -f wp-includes/version.php ]; then
+  wp core download --allow-root
+fi
+
 # 1) Créer wp-config.php si absent
 if [ ! -f wp-config.php ]; then
   wp config create \
@@ -27,7 +31,7 @@ if [ ! -f wp-config.php ]; then
     --dbuser="${DB_USER}" \
     --dbpass="${DB_PASS}" \
     --dbhost="${DB_HOST}" \
-    --skip-check \        # on ne teste pas la DB maintenant
+    --skip-check \
     --force \
     --allow-root
   wp config shuffle-salts --allow-root

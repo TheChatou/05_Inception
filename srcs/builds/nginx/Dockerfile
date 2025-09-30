@@ -29,7 +29,7 @@ RUN apt-get update \
  && rm -rf /var/lib/apt/lists/*
 
 # Création des répertoires nécessaires
-RUN mkdir -p /etc/nginx/certs /var/www/wordpress
+RUN mkdir -p /etc/nginx/certs /var/www/html
 
 # Génération d'un certificat auto-signé pour le SSL - necessite de valider sur le navigateur
 RUN openssl req -x509 -nodes -newkey rsa:2048 -days 365 \
@@ -42,6 +42,7 @@ RUN openssl req -x509 -nodes -newkey rsa:2048 -days 365 \
 # Copie de la configuration nginx
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY site.conf /etc/nginx/conf.d/site.conf
+RUN rm -f /etc/nginx/conf.d/default.conf
 
 # Port 443 pour le https
 EXPOSE 443

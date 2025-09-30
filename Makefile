@@ -28,10 +28,12 @@ RESET=\033[0m
 CLEAR_EOL=\033[K
 CLEAR_EOL_FROM_CURSOR=; tput el; printf 
 
+COMPOSE = docker compose -f srcs/docker-compose.yml -p inception
+
 ################################################################################
 ##	RULES		################################################################
 
-all: mariadb_data wordpress_data up 
+all: mariadb_data wordpress_data build up 
 
 #build les dossiers des data
 mariadb_data:
@@ -42,22 +44,37 @@ wordpress_data:
 	
 #verifie la construction et construit
 up:
-	docker compose -f srcs/docker-compose.yml up -d --build
+	$(COMPOSE) up -d --build
 
 down:
-	docker compose -f srcs/docker-compose.yml down
+	$(COMPOSE) down
+
+build:
+	$(COMPOSE) build --no-cache
+
+#	ATTENTION: supprime les commentaires et tout
+docker-rm:
+	docker volume rm mariadb
+
+#	ATTENTION: supprime les dossiers de data
+purge:
+	sudo rm -rf /home/fcoullou/data/wordpress/*	|| true
+	sudo rm -rf /home/fcoullou/data/mariadb/*	|| true
+
+ps:
+	$(COMPOSE) ps
+
+logs:
+	$(COMPOSE) logs -f
 
 clean:
-	docker compose -f srcs/docker-compose.yml down --volumes
+	$(COMPOSE) down -v --remove-orphans
 
 fclean: clean
-	docker system prune -af
+	docker image prune -f
+	docker builder prune -f
 
-purge:
-	sudo rm -rf /home/fcoullou/data/wordpress/*
-	sudo rm -rf /home/fcoullou/data/mariadb/*
+re: fclean build up
 
-re: purge down fclean up
-
-.PHONY: all up down clean fclean re purge
+.PHONY: up down build ps logs clean fclean purge re
 #------------------------------------------------------------------------------#
