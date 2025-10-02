@@ -24,4 +24,3 @@ RUN chmod 777 /home/dbStart.sh
 
 # Une fois la base de données créée, le script sera exécuté
 ENTRYPOINT [ "/home/dbStart.sh" ]
-

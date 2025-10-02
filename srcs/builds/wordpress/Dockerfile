@@ -17,10 +17,6 @@ FROM debian:bookworm
 RUN apt-get update && apt-get upgrade -y && \
     apt-get install -y php php-mysql php8.2-fpm
 
-# Installation de iproute2 pour la commande ss (non c'est pas une connerie)
-# C'est pour vérifier que le port 9000 est bien ouvert avant de lancer PHP-FPM
-RUN apt-get install -y iproute2
-
 # Installation de WordPress dans /var/www/html
 RUN apt-get install -y wget unzip && \
     wget https://wordpress.org/latest.zip -O /tmp/wordpress.zip && \

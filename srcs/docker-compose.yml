@@ -35,6 +35,9 @@ services:
     volumes:
       - wordpress:/var/www/html:ro
     networks: [inception]
+    secrets:
+      - server.crt
+      - server.key
 
 volumes:
   mariadb:
@@ -64,3 +67,7 @@ secrets:
     file: ../secrets/db_pswd.txt
   wp_password:
     file: ../secrets/wp_pswd.txt
+  server.crt:
+    file: ../secrets/server.crt
+  server.key:
+    file: ../secrets/server.key  
